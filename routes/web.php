@@ -115,20 +115,19 @@ use App\Http\Controllers\ProductController; // frontend
 use App\Http\Controllers\Admin\ProductController as AdminProductController; // admin
 use App\Http\Controllers\RevenueController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Redirect;
 
 // ==========================
 // FRONTEND
 // ==========================
 
-// Trang chủ
 Route::get('/', [ProductController::class, 'home'])->name('home');
-
 
 // Sản phẩm
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -138,42 +137,43 @@ Route::get('/products/{id}', [ProductController::class, 'show'])->name('products
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
-//Tìm kiếm
+// Tìm kiếm
 Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
-// Giỏ hàng (KHÔNG CẦN LOGIN)
+
+// Giỏ hàng (NO LOGIN)
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
-// Checkout + Orders (phải login)
+// Checkout + Orders (LOGIN REQUIRED)
 Route::middleware(['auth'])->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder');
 
-    // Đơn hàng user
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
 // ==========================
-// PROFILE + DASHBOARD
+// PROFILE
 // ==========================
+
 Route::middleware(['auth'])->group(function () {
+
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/profile/view', [ProfileController::class, 'index'])
-    ->middleware('auth')
-    ->name('profile');
+    Route::get('/profile/view', [ProfileController::class, 'index'])->name('profile');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// LOGIN – LOGOUT
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/logout', function () {
@@ -182,28 +182,55 @@ Route::post('/logout', function () {
     return redirect('/')->with('success', 'Bạn đã đăng xuất thành công!');
 })->name('logout')->middleware('auth');
 
-
 // ==========================
 // ADMIN
 // ==========================
-Route::prefix('admin')
-    ->middleware(['auth', 'is_admin'])
+
+Route::middleware(['auth', 'is_admin'])
+    ->prefix('admin')
     ->group(function () {
 
-        Route::get('/', [\App\Http\Controllers\Admin\AdminController::class, 'dashboard'])
-            ->name('admin.dashboard');
+        Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-        // RESOURCE CRUD
-        Route::resource('products', \App\Http\Controllers\Admin\ProductController::class)
-            ->names('admin.products');
+        // Route::resource('products', ProductController::class)->names('admin.products');
+        Route::get('/products', [App\Http\Controllers\Admin\ProductController::class, 'index'])->name('admin.products.index');
+        Route::get('/products/create', [App\Http\Controllers\Admin\ProductController::class, 'create'])->name('admin.products.create');
+        Route::get('/products/edit', [App\Http\Controllers\Admin\ProductController::class, 'edit'])->name('admin.products.edit');
+        Route::get('/products/destroy', [App\Http\Controllers\Admin\ProductController::class, 'destroy'])->name('admin.products.destroy');
+        Route::get('/products/update', [App\Http\Controllers\Admin\ProductController::class, 'update'])->name('admin.products.update');
+        Route::get('/products/store', [App\Http\Controllers\Admin\ProductController::class, 'store'])->name('admin.products.store');
 
-        Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)
-            ->names('admin.orders');
+        Route::resource('categories', CategoryController::class)->names('admin.categories');
+        // Route::resource('categories', CategoryController::class,'index')->names('admin.categories.index');
 
-        Route::resource('users', \App\Http\Controllers\Admin\UserController::class)
-            ->names('admin.users');
+        Route::resource('orders', OrderController::class);
+
+        // Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+        // // Route::resource('orders', OrderController::class)->only(['index', 'show'])->names('admin.orders');
+        // Route::post('/orders', [OrderController::class, 'index'])->name('admin.orders.index');
+        // Route::post('/orders', [OrderController::class, 'update'])->name('admin.orders.update');
+        // Route::post('/orders', [OrderController::class, 'edit'])->name('admin.orders.edit');
+        // Route::get('/orders', [OrderController::class, 'destroy'])->name('admin.orders.destroy');
 });
 
-// ==========================
+// Route::prefix('admin')
+//     ->middleware(['auth', 'is_admin'])
+//     ->group(function () {
+
+//         Route::get('/', [\App\Http\Controllers\Admin\AdminController::class, 'dashboard'])
+//             ->name('admin.dashboard');
+
+//         Route::resource('products', \App\Http\Controllers\Admin\ProductController::class)
+//             ->names('admin.products');
+
+//         Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)
+//             ->names('admin.orders');
+
+//         Route::resource('users', \App\Http\Controllers\Admin\UserController::class)
+//             ->names('admin.users');
+
+//         Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class);
+// });
+
+// ========== REMOVE THIS ==========
 require __DIR__.'/auth.php';
-require __DIR__.'/admin.php';
