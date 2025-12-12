@@ -71,30 +71,62 @@
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-                    {{-- <div class="mb-4">
+
+
+                    <div class="mb-4">
                         <label class="block mb-1 font-semibold">Số điện thoại</label>
                         <input type="text" name="customer_phone" value="{{ old('customer_phone') }}"
-                               class="w-full border rounded px-3 py-2">
+                            class="w-full border rounded px-3 py-2"
+                            required
+                            pattern="0[0-9]{9}"
+                            title="Số điện thoại phải đủ 10 số và bắt đầu bằng 0">
                         @error('customer_phone')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                         @enderror
-                    </div> --}}
-
-                    <div class="mb-4">
-    <label class="block mb-1 font-semibold">Số điện thoại</label>
-    <input type="text" name="customer_phone" value="{{ old('customer_phone') }}"
-           class="w-full border rounded px-3 py-2"
-           required
-           pattern="0[0-9]{9}"
-           title="Số điện thoại phải đủ 10 số và bắt đầu bằng 0">
-    @error('customer_phone')
-        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
-    @enderror
-</div>
+                    </div>
                     <div class="mb-4">
                         <label class="block mb-1 font-semibold">Địa chỉ nhận hàng</label>
                         <textarea name="shipping_address" required class="w-full border rounded px-3 py-2">{{ old('shipping_address') }}</textarea>
                         @error('shipping_address')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block mb-1 font-semibold">Phương thức thanh toán</label>
+
+                        <div class="space-y-3">
+
+                            <!-- COD -->
+                            <label class="flex items-center gap-3 p-3 border rounded cursor-pointer hover:bg-gray-50">
+                                <input type="radio" name="payment_method" value="cod" class="w-4 h-4" checked>
+                                <div>
+                                    <p class="font-semibold">Thanh toán khi nhận hàng (COD)</p>
+                                    <p class="text-sm text-gray-600">Bạn sẽ thanh toán khi nhận hàng từ shipper.</p>
+                                </div>
+                            </label>
+
+                            <!-- MOMO -->
+                            <label class="flex items-center gap-3 p-3 border rounded cursor-pointer hover:bg-gray-50">
+                                <input type="radio" name="payment_method" value="momo" class="w-4 h-4">
+                                <div>
+                                    <p class="font-semibold">Ví Momo</p>
+                                    <p class="text-sm text-gray-600">Thanh toán nhanh qua ví Momo.</p>
+                                </div>
+                            </label>
+
+                            <!-- BANK -->
+                            <label class="flex items-center gap-3 p-3 border rounded cursor-pointer hover:bg-gray-50">
+                                <input type="radio" name="payment_method" value="bank" class="w-4 h-4">
+                                <div>
+                                    <p class="font-semibold">Chuyển khoản ngân hàng</p>
+                                    <p class="text-sm text-gray-600">Chuyển khoản theo thông tin hiển thị sau khi đặt hàng.</p>
+                                </div>
+                            </label>
+
+                        </div>
+
+                        @error('payment_method')
                             <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>

@@ -82,8 +82,8 @@
 
             @php
                 $products = [
-                ['name' => 'Len Acrylic Pastel', 'price' => '85.000đ', 'image' => 'acrylic_soft.jpg'],
-                ['name' => 'Len Wool Mềm', 'price' => '95.000đ', 'image' => 'wool_natural.jpg'],
+                ['name' => 'Len Acrylic Pastel', 'price' => '85.000đ', 'image' => 'acrylic_color.jpg'],
+                ['name' => 'Len Wool Mềm', 'price' => '95.000đ', 'image' => 'wool_large.jpg'],
                 ['name' => 'Len Cotton Tự Nhiên', 'price' => '75.000đ', 'image' => 'milk_cotton.jpg'],
                 ['name' => 'Bộ kit bắt đầu', 'price' => '150.000đ', 'image' => 'kit.jpg'],
             ];
@@ -132,7 +132,7 @@
 
             @foreach([1,2,3] as $f)
                 <div class="bg-white shadow rounded-lg overflow-hidden">
-                    <img src="https://via.placeholder.com/600x400/ffeaf4/7a1b3a?text=Khách+{{ $f }}"
+                     <img src="{{ asset('images/khach' . $f . '.jpg') }}"
                          class="w-full h-48 object-cover">
                     <div class="p-3 text-sm">
                         <p>“Len đẹp, mềm và màu giống hình!”</p>

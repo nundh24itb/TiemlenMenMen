@@ -37,8 +37,8 @@ class ProductSeeder extends Seeder
             ['name' => 'Bộ kit chuyên nghiệp', 'category_id' => 5, 'price' => 350000, 'description' => 'Bộ kit đầy đủ dụng cụ', 'image' => 'kit_pro.jpg'],
 
             // Phụ kiện
-            ['name' => 'Phụ kiện len đa dạng', 'category_id' => 6, 'price' => 70000, 'description' => 'Phụ kiện đầy đủ', 'image' => 'accessory_full.jpg'],
-            ['name' => 'Băng đô len', 'category_id' => 6, 'price' => 30000, 'description' => 'Băng đô nhiều màu', 'image' => 'headband.jpg'],
+            ['name' => 'Phụ kiện len đa dạng', 'category_id' => 6, 'price' => 70000, 'description' => 'Phụ kiện đầy đủ', 'image' => 'phukien.jpg'],
+            ['name' => 'Băng đô len', 'category_id' => 6, 'price' => 30000, 'description' => 'Băng đô nhiều màu', 'image' => 'bangdo.jpg'],
         ];
 
         // foreach ($products as $prod) {

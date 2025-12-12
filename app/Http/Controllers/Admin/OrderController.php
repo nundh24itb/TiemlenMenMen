@@ -4,7 +4,7 @@
 
 // use App\Http\Controllers\Controller;
 // use App\Models\Order;
-// use Illuminate\Http\Request;
+
 
 // class OrderController extends Controller
 // {
@@ -66,7 +66,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-
+use Illuminate\Http\Request;
 class OrderController extends Controller
 {
     public function index()
@@ -79,4 +79,19 @@ class OrderController extends Controller
     {
         return view('admin.orders.show', compact('order'));
     }
+    public function edit($id)
+{
+    $order = Order::findOrFail($id);
+    return view('admin.orders.edit', compact('order'));
+}
+
+public function update(Request $request, $id)
+{
+    $order = Order::findOrFail($id);
+    // xử lý update dữ liệu
+    $order->status = $request->status;
+    $order->save();
+
+    return redirect()->route('admin.orders.index')->with('success', 'Cập nhật đơn hàng thành công');
+}
 }

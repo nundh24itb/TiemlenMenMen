@@ -49,14 +49,32 @@ class ProductController extends Controller
         return back()->with('ok', 'Xóa thành công!');
     }
 
-    public function search(Request $request)
-    {
-        $query = $request->input('q');
+    // public function search(Request $request)
+    // {
+    //     $query = $request->input('q');
 
-        $products = \App\Models\Product::where('name', 'like', "%{$query}%")
-                    ->orderBy('created_at', 'desc')
-                    ->get();
+    //     $products = \App\Models\Product::where('name', 'like', "%{$query}%")
+    //                 ->orderBy('created_at', 'desc')
+    //                 ->get();
 
-        return view('products.index', compact('products', 'query'));
-    }
+    //     return view('products.index', compact('products', 'query'));
+    // }
+public function search(Request $request)
+{
+    $q = $request->input('q');
+
+    $products = Product::where('name', 'like', "%$q%")->get();
+
+    return view('products.search', compact('products'));
+}
+
+    public function category($slug)
+{
+    $products = Product::where('category', $slug)->get();
+
+    return view('products.category', [
+        'products' => $products,
+        'slug' => $slug
+    ]);
+}
 }

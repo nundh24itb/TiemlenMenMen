@@ -14,13 +14,20 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
-    {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
-    }
+    // public function edit(Request $request): View
+    // {
+    //     return view('profile.edit', [
+    //         'user' => $request->user(),
+    //     ]);
+    // }
 
+    public function edit(Request $request): View
+{
+    $user = $request->user();
+    $orderCount = $user->orders()->count(); // sửa đúng quan hệ orders() trong User
+
+    return view('profile.index', compact('user', 'orderCount'));
+}
     /**
      * Update the user's profile information.
      */

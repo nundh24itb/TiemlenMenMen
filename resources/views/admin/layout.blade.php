@@ -20,19 +20,26 @@
                 Dashboard
             </a>
 
-            <a href="{{ route('admin.users.index') }}" class="block p-2 rounded hover:bg-pink-600">
+            {{-- <a href="{{ route('admin.users.index') }}" class="block p-2 rounded hover:bg-pink-600">
                 Quản lý Users
-            </a>
+            </a> --}}
 
             {{-- <a href="{{ route('admin.products.index') }}" class="block p-2 rounded hover:bg-pink-600">Sản phẩm</a>
             <a href="{{ route('admin.orders.index') }}" class="block p-2 rounded hover:bg-pink-600">Đơn hàng</a> --}}
 
-            <form method="POST" action="{{ route('logout') }}">
+            {{-- <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button class="mt-4 bg-red-500 px-3 py-2 rounded w-full text-left">
                     Đăng xuất
                 </button>
-            </form>
+            </form> --}}
+
+            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                                    Đăng xuất
+                                </x-dropdown-link>
+                            </form>
         </nav>
     </aside>
 

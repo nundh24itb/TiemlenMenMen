@@ -107,7 +107,7 @@
                 <!-- Logo -->
                 <div class="flex items-center shrink-0">
                     <a href="/">
-                        <img src="{{ asset('images/logo.png') }}" alt="Tiệm Len Mèn Mén" class="h-10 w-auto">
+                        <img src="{{ asset('images/logo.png') }}" alt="Tiệm Len Mèn Mén" class="w-auto h-10">
                         <h1 class="text-xl font-bold text-pink-800">Tiệm Len Mèn Mén</h1>
                     </a>
                 </div>
@@ -231,31 +231,58 @@
 
 <nav x-data="{ open: false }" class="bg-pink-200 border-b border-pink-300">
     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16 items-center">
+        <div class="flex items-center justify-between h-16">
 
             <!-- Logo + Tên shop -->
             <div class="flex items-center shrink-0">
                 <a href="/" class="flex items-center">
-                    <img src="{{ asset('images/logo.jpg') }}" alt="Tiệm Len Mèn Mén" class="h-10 w-auto">
+                    <img src="{{ asset('images/logo.jpg') }}" alt="Tiệm Len Mèn Mén" class="w-10 h-8">
                     <span class="ml-2 text-xl font-bold text-pink-800">Tiệm Len Mèn Mén</span>
                 </a>
             </div>
 
             <!-- Search bar -->
-            <div class="hidden sm:flex flex-1 mx-6">
-                <form action="{{ route('products.search') }}" method="GET" class="w-full">
+            {{-- <div class="flex-1 hidden mx-6 sm:flex">
+                <form action="{{ route('products.search') }}" method="GET" class="flex w-full">
                     <input type="text" name="q" placeholder="Tìm kiếm sản phẩm..."
-                        class="w-full px-4 py-2 border border-pink-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                        class="flex-1 px-4 py-2 border border-pink-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                    <button type="submit" class="px-4 py-2 text-white bg-pink-500 rounded-r-lg hover:bg-pink-600">
+                        🔍
+                    </button>
+                </form>
+            </div> --}}
+
+            <div x-data="{ showBtn: false }" class="flex-1 hidden mx-6 sm:flex w-full max-w-xl">
+                <form action="{{ route('products.search') }}" method="GET" class="flex w-full">
+
+                    <!-- Ô nhập -->
+                    <input type="text" name="q"
+                        @focus="showBtn = true"
+                        @blur="if(!$event.target.value) showBtn = false"
+                        placeholder="Tìm kiếm sản phẩm..."
+                        class="flex-1 px-4 py-2 border border-pink-300 rounded-lg
+                            focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500
+                            transition-all duration-200">
+
+                    <!-- Nút tìm kiếm (ẩn/hiện bằng Alpine) -->
+                    <button type="submit"
+                        x-show="showBtn"
+                        x-transition
+                        class="px-4 py-2 ml-2 text-white bg-pink-500 rounded-lg hover:bg-pink-600">
+                        🔍
+                    </button>
+
                 </form>
             </div>
             <!--sản phẩm -->
-            <div class="hidden sm:flex items-center gap-4">
+            <div class="items-center hidden gap-4 sm:flex">
                 <a href="/products" class="px-3 py-2 text-sm font-medium text-pink-700 hover:underline">Sản phẩm </a>
 
 
-            <!-- Đăng nhập / Đăng ký / Giỏ hàng -->
-            <div class="hidden sm:flex items-center gap-4">
+            <!-- Đăng nhập / Đăng ký / Giỏ hàng/liên hệ -->
+            <div class="items-center hidden gap-4 sm:flex">
                 <a href="/cart" class="px-3 py-2 text-sm font-medium text-pink-700 hover:underline">Giỏ hàng</a>
+                <a href="/contact" class="px-3 py-2 text-sm font-medium text-pink-700 hover:underline">Liên hệ</a>
 
                 @guest
                     <a href="{{ route('login') }}" class="px-3 py-2 text-sm font-medium text-pink-700 hover:underline">Đăng nhập</a>
@@ -297,7 +324,7 @@
     </div>
 
     <!-- Mobile menu -->
-    <div :class="{'block': open, 'hidden': !open}" class="hidden sm:hidden bg-pink-100">
+    <div :class="{'block': open, 'hidden': !open}" class="hidden bg-pink-100 sm:hidden">
         <div class="px-4 pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="url('/')">Trang chủ</x-responsive-nav-link>
             <x-responsive-nav-link :href="url('/products')">Sản phẩm</x-responsive-nav-link>

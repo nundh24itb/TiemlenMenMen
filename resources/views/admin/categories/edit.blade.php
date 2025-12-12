@@ -1,4 +1,4 @@
-@extends('admin.layouts.admin')
+@extends('admin.layout')
 
 @section('content')
 <div class="p-6 bg-white shadow rounded w-1/2 mx-auto">

@@ -129,6 +129,8 @@ use Illuminate\Support\Facades\Session;
 
 Route::get('/', [ProductController::class, 'home'])->name('home');
 
+// Tìm kiếm
+Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
 // Sản phẩm
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
@@ -137,8 +139,8 @@ Route::get('/products/{id}', [ProductController::class, 'show'])->name('products
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
-// Tìm kiếm
-Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
+Route::get('/category/{slug}', [ProductController::class, 'category'])
+    ->name('category.show');
 
 // Giỏ hàng (NO LOGIN)
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -156,6 +158,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
+Route::get('/checkout/payment-guide/{order}', [CheckoutController::class, 'paymentGuide'])
+    ->name('checkout.paymentGuide');
+Route::post('/checkout/confirm-payment/{order}', [CheckoutController::class, 'confirmPayment'])
+    ->name('checkout.confirmPayment');
+
+//Phuowgn thức thanh toán
+// Route::get('/payment/bank/{order}', [CheckoutController::class, 'bankPayment'])
+//     ->name('payment.bank');
+// Route::get('/payment/momo/return', [CheckoutController::class, 'momoReturn'])->name('payment.momo.return');
+// Route::get('/payment/zalopay/return', [CheckoutController::class, 'zalopayReturn'])->name('payment.zalopay.return');
+
+
 // ==========================
 // PROFILE
 // ==========================
@@ -166,7 +180,7 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/profile/view', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -186,31 +200,47 @@ Route::post('/logout', function () {
 // ADMIN
 // ==========================
 
-Route::middleware(['auth', 'is_admin'])
-    ->prefix('admin')
-    ->group(function () {
+// Route::middleware(['auth', 'is_admin'])
+//     ->prefix('admin')
+//     ->group(function () {
+Route::prefix('admin')->middleware(['auth','is_admin'])->name('admin.')->group(function () {
 
-        Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::post('/admin/logout', function () {
+    Auth::logout();
+    Session::flush();
+    return redirect('/login')->with('success', 'Admin đã đăng xuất!');
+})->name('admin.logout')->middleware(['auth','is_admin']);
+        Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
 
-        // Route::resource('products', ProductController::class)->names('admin.products');
-        Route::get('/products', [App\Http\Controllers\Admin\ProductController::class, 'index'])->name('admin.products.index');
-        Route::get('/products/create', [App\Http\Controllers\Admin\ProductController::class, 'create'])->name('admin.products.create');
-        Route::get('/products/edit', [App\Http\Controllers\Admin\ProductController::class, 'edit'])->name('admin.products.edit');
-        Route::get('/products/destroy', [App\Http\Controllers\Admin\ProductController::class, 'destroy'])->name('admin.products.destroy');
-        Route::get('/products/update', [App\Http\Controllers\Admin\ProductController::class, 'update'])->name('admin.products.update');
-        Route::get('/products/store', [App\Http\Controllers\Admin\ProductController::class, 'store'])->name('admin.products.store');
+        // Route::resource('products', ProductController::class)->names('products');
+        Route::resource('products', AdminProductController::class)->names([
+        'index' => 'products.index',
+        'create' => 'products.create',
+        'store' => 'products.store',
+        'show' => 'products.show',
+        'edit' => 'products.edit',
+        'update' => 'products.update',
+        'destroy' => 'products.destroy',
+    ]);
 
-        Route::resource('categories', CategoryController::class)->names('admin.categories');
-        // Route::resource('categories', CategoryController::class,'index')->names('admin.categories.index');
+    Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)
+        ->names([
+            'index' => 'orders.index',
+            'show' => 'orders.show',
+            'edit' => 'orders.edit',
+            'update' => 'orders.update',
+            'destroy' => 'orders.destroy',
+        ]);
+        // Route::get('/products/create', [App\Http\Controllers\Admin\ProductController::class, 'create'])->name('admin.products.create');
+        // Route::get('/products/edit', [App\Http\Controllers\Admin\ProductController::class, 'edit'])->name('admin.products.edit');
+        // Route::get('/products/destroy', [App\Http\Controllers\Admin\ProductController::class, 'destroy'])->name('admin.products.destroy');
+        // Route::get('/products/update', [App\Http\Controllers\Admin\ProductController::class, 'update'])->name('admin.products.update');
+        // Route::get('/products/store', [App\Http\Controllers\Admin\ProductController::class, 'store'])->name('admin.products.store');
 
-        Route::resource('orders', OrderController::class);
+        Route::resource('categories', CategoryController::class)->names('categories');
 
-        // Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-        // // Route::resource('orders', OrderController::class)->only(['index', 'show'])->names('admin.orders');
-        // Route::post('/orders', [OrderController::class, 'index'])->name('admin.orders.index');
-        // Route::post('/orders', [OrderController::class, 'update'])->name('admin.orders.update');
-        // Route::post('/orders', [OrderController::class, 'edit'])->name('admin.orders.edit');
-        // Route::get('/orders', [OrderController::class, 'destroy'])->name('admin.orders.destroy');
+        // Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)->names('orders');
+
 });
 
 // Route::prefix('admin')
