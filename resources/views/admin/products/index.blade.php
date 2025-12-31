@@ -26,9 +26,12 @@
             <td class="px-4 py-2">{{ $p->id }}</td>
             <td class="px-4 py-2">{{ $p->name }}</td>
             <td class="px-4 py-2">{{ number_format($p->price) }}đ</td>
-            <td class="px-4 py-2">{{ $p->category->name }}</td>
+            {{-- <td class="px-4 py-2">{{ $p->category->name }}</td> --}}
             <td class="px-4 py-2">
-                <img src="{{ asset('uploads/'.$p->image) }}" class="w-16 h-16 object-cover rounded">
+    {{ $p->category?->name ?? 'Chưa phân loại' }}
+</td>
+            <td class="px-4 py-2">
+                <img src="{{ asset('images/'.$p->image) }}" class="w-16 h-16 object-cover rounded">
             </td>
             <td class="px-4 py-2 flex space-x-2">
                 <a href="{{ route('admin.products.edit', $p->id) }}"
