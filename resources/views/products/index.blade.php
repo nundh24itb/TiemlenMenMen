@@ -1,109 +1,3 @@
-{{-- {{-- @extends('layouts.app')
-
-@section('content')
-<h1>Danh mục sản phẩm</h1>
-<div class="grid grid-cols-3 gap-4">
-@foreach($products as $product)
-    <div class="p-2 border">
-        <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="object-cover w-full h-40">
-        <h2>{{ $product->name }}</h2>
-        <p>{{ $product->price }} VND</p>
-        <a href="{{ route('products.show', $product->id) }}">Xem chi tiết</a>
-    </div>
-@endforeach
-</div>
-@endsection --}}
-
-{{-- @extends('layouts.app')
-
-@section('content')
-<h2 class="mb-4 text-2xl font-bold">Danh mục sản phẩm</h2>
-
-<div class="grid grid-cols-3 gap-5">
-@foreach ($products as $p)
-    <div class="p-4 bg-white rounded shadow">
-        <img src="{{ $p->image }}" class="object-cover w-full h-40 mb-2 rounded">
-        <h3 class="font-bold">{{ $p->name }}</h3>
-        <p class="font-semibold text-pink-600">{{ number_format($p->price) }}đ</p>
-
-        <a href="/product/{{ $p->id }}" class="text-blue-500">Xem chi tiết</a>
-    </div>
-@endforeach
-</div>
-
-<div class="mt-4">
-    {{ $products->links() }}
-</div>
-@endsection --}}
-
-
-{{-- @extends('layouts.app')
-
-@section('title', 'Danh sách sản phẩm')
-
-@section('content')
-    <h1>Danh sách sản phẩm</h1>
-
-    @foreach ($products as $p)
-        <p>{{ $p->name }} - {{ $p->price }}</p>
-    @endforeach
-@endsection --}}
-
-{{-- <x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold leading-tight text-gray-800">
-            Danh sách sản phẩm
-        </h2>
-    </x-slot>
-
-    <div class="py-6">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="p-6 overflow-hidden bg-white shadow-xl sm:rounded-lg">
-                @foreach ($products as $p)
-                    <p>{{ $p->name }} - {{ $p->price }}</p>
-                @endforeach
-            </div>
-        </div>
-    </div>
-</x-app-layout> --}}
-
-{{-- <x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold leading-tight text-gray-800">
-            Danh sách sản phẩm
-        </h2>
-    </x-slot>
-
-    <div class="py-6">
-        <div class="grid grid-cols-1 gap-6 mx-auto max-w-7xl sm:px-6 lg:px-8 md:grid-cols-3">
-            @foreach ($products as $p)
-                <div class="flex flex-col p-4 bg-white rounded-lg shadow-xl">
-                    {{-- <img src="{{ asset($p->image) }}" class="object-cover w-full h-48 mb-2 rounded" alt="{{ $p->name }}"> --}}
-{{--
-                    <img src="{{ asset('images/' . $p->image) }}" class="object-cover w-full h-48 mb-2 rounded" alt="{{ $p->name }}">
-                    <h3 class="text-lg font-bold">{{ $p->name }}</h3>
-                    {{-- <p class="mb-2 font-semibold text-pink-600">{{ $p->price, 0, ',', '.' }} VND</p> --}}
-                    {{-- <p class="font-semibold text-pink-600">{{ number_format($p->price, 0, ',', '.') }} VND</p>
-
-                    <div class="mt-auto">
-                        <a href="{{ route('products.show', $p->id) }}"
-                           class="inline-block px-4 py-2 mr-2 text-white bg-pink-500 rounded hover:bg-pink-600">
-                            Xem chi tiết
-                        </a>
-                        <form action="{{ route('cart.add', $p->id) }}" method="POST" class="inline-block">
-                            @csrf
-                            <button type="submit" class="px-4 py-2 text-white bg-green-400 rounded hover:bg-green-500">
-                                Thêm giỏ hàng
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</x-app-layout>  --}}
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800">
@@ -125,9 +19,34 @@
         {{-- Sản phẩm --}}
         <div class="grid grid-cols-1 gap-6 mx-auto max-w-7xl sm:px-6 lg:px-8 md:grid-cols-3">
             @foreach ($products as $p)
-                <div class="flex flex-col p-4 bg-white rounded-lg shadow-xl">
-                    <img src="{{ asset('images/' . $p->image) }}" class="object-cover w-full h-48 mb-2 rounded" alt="{{ $p->name }}">
-                    <h3 class="text-lg font-bold">{{ $p->name }}</h3>
+                {{-- <div class="flex flex-col p-4 bg-white rounded-lg shadow-xl"> --}}
+                    <div class="relative flex flex-col p-4 bg-white rounded-lg shadow-xl">
+                    <img src="{{ asset('images/' . $p->image) }}" class="w-full h-40 object-cover
+            group-hover:scale-105 transition duration-500" alt="{{ $p->name }}">
+                    {{-- <h3 class="text-lg font-bold">{{ $p->name }}</h3> --}}
+                    <div class="flex items-center justify-between mt-2">
+                        {{-- Tên sản phẩm (bên trái) --}}
+                        <h3 class="text-base font-semibold">
+                            {{ $p->name }}
+                        </h3>
+
+                        {{-- Sao đánh giá (bên phải) --}}
+                        <div class="flex items-center gap-1">
+                            @for($i = 1; $i <= 5; $i++)
+                                <svg class="w-4 h-4 {{ $i <= ($p->rating ?? 4) ? 'text-yellow-400' : 'text-gray-300' }}"
+                                    fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1
+                                    1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8
+                                    2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755
+                                    1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8
+                                    2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1
+                                    1 0 00-.364-1.118L2.98 8.719c-.783-.57-.38-1.81.588-1.81h3.461a1
+                                    1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                            @endfor
+                            <span class="text-xs text-gray-500">(4.8)</span>
+                        </div>
+                    </div>
                     <p class="font-semibold text-pink-600">{{ number_format($p->price, 0, ',', '.') }} VND</p>
 
                     <div class="mt-auto">

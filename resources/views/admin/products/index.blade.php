@@ -4,12 +4,12 @@
 <div class="flex justify-between mb-6">
     <h1 class="text-2xl font-bold">Quản lý sản phẩm</h1>
     <a href="{{ route('admin.products.create') }}"
-       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+       class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">
         + Thêm sản phẩm
     </a>
 </div>
 
-<table class="w-full bg-white rounded shadow overflow-hidden">
+<table class="w-full overflow-hidden bg-white rounded shadow">
     <thead class="bg-gray-200">
         <tr>
             <th class="px-4 py-2 text-left">ID</th>
@@ -28,17 +28,17 @@
             <td class="px-4 py-2">{{ number_format($p->price) }}đ</td>
             {{-- <td class="px-4 py-2">{{ $p->category->name }}</td> --}}
             <td class="px-4 py-2">
-    {{ $p->category?->name ?? 'Chưa phân loại' }}
-</td>
-            <td class="px-4 py-2">
-                <img src="{{ asset('images/'.$p->image) }}" class="w-16 h-16 object-cover rounded">
+                {{ $p->category?->name ?? 'Chưa phân loại' }}
             </td>
-            <td class="px-4 py-2 flex space-x-2">
+            <td class="px-4 py-2">
+                <img src="{{ asset('images/'.$p->image) }}" class="object-cover w-16 h-16 rounded">
+            </td>
+            <td class="flex px-4 py-2 space-x-2">
                 <a href="{{ route('admin.products.edit', $p->id) }}"
-                   class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">Sửa</a>
+                   class="px-3 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600">Sửa</a>
                 <form action="{{ route('admin.products.destroy', $p->id) }}" method="POST">
                     @csrf @method('DELETE')
-                    <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">Xóa</button>
+                    <button class="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600">Xóa</button>
                 </form>
             </td>
         </tr>

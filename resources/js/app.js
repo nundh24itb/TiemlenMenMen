@@ -5,3 +5,10 @@ import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 
 Alpine.start();
+window.cartToast = function () {
+    return {
+        addToCart(id) {
+            alert('Đã thêm sản phẩm ID: ' + id)
+        }
+    }
+}
